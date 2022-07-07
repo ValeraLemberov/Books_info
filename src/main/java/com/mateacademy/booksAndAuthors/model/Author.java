@@ -15,13 +15,18 @@ import java.time.LocalDate;
 public class Author {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "id")
     private Long Id;
+
     @Column(name = "author_name")
     private String authorName;
+
     @Column(name = "birth_date")
     private LocalDate birthDate;
+
     @Column(name = "phone")
     private String phone;
+
     @Column(name = "email")
     private String email;
 }
