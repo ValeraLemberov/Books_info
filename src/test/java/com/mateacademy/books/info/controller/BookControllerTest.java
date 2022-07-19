@@ -62,10 +62,9 @@ class BookControllerTest {
         book2 = new Book(2L, "House of dragon", Set.of(author1), 1123124, 23441232);
         book3 = new Book(3L, "Twilight", Set.of(author1), 12313123, 34234);
         bookRequestDto =
-                new BookRequestDto(book1.getBookName(),
+                new BookRequestDto(book1.getTitle(),
                         Set.of(1L),book1.getPublishedAmount(), book1.getSoldAmount());
-        mockBook = new Book(null, book1.getBookName(),
-                Set.of(author1),book1.getPublishedAmount(), book1.getSoldAmount());
+        mockBook = new Book(null, "Harry Potter", Set.of(author1), 2022123, 21314234);
     }
 
     @Test
@@ -74,22 +73,22 @@ class BookControllerTest {
         Mockito.when(bookService.getAllByAuthorName("H. P. Lovecraft")).thenReturn(mockBooks);
         Mockito.when(authorService.findById(1L)).thenReturn(author1);
         RestAssuredMockMvc.given()
-                .queryParam("author-name", "H. P. Lovecraft")
+                .queryParam("by-author", "H. P. Lovecraft")
                 .when()
-                .get("/books/all-books")
+                .get("/books")
                 .then()
                 .statusCode(200)
                 .body("size()", Matchers.equalTo(3))
                 .body("[0].id", Matchers.equalTo(1))
-                .body("[0].bookName", Matchers.equalTo("Harry Potter"))
+                .body("[0].title", Matchers.equalTo("Harry Potter"))
                 .body("[0].publishedAmount", Matchers.equalTo(2022123))
                 .body("[0].soldAmount", Matchers.equalTo(21314234))
                 .body("[1].id", Matchers.equalTo(2))
-                .body("[1].bookName", Matchers.equalTo("House of dragon"))
+                .body("[1].title", Matchers.equalTo("House of dragon"))
                 .body("[1].publishedAmount", Matchers.equalTo(1123124))
                 .body("[1].soldAmount", Matchers.equalTo(23441232))
                 .body("[2].id", Matchers.equalTo(3))
-                .body("[2].bookName", Matchers.equalTo("Twilight"))
+                .body("[2].title", Matchers.equalTo("Twilight"))
                 .body("[2].publishedAmount", Matchers.equalTo(12313123))
                 .body("[2].soldAmount", Matchers.equalTo(34234));
     }
@@ -107,25 +106,27 @@ class BookControllerTest {
                 .then()
                 .statusCode(200)
                 .body("id",Matchers.equalTo(1))
-                .body("bookName",Matchers.equalTo("Harry Potter"))
+                .body("title",Matchers.equalTo("Harry Potter"))
                 .body("publishedAmount",Matchers.equalTo(2022123))
                 .body("soldAmount",Matchers.equalTo(21314234));
     }
 
     @Test
     void updateBook(){
-        Mockito.when(bookService.update(mockBook , 1L)).thenReturn(book1);
+        mockBook.setId(1L);
+        mockBook.setTitle("House of dragon");
+        Mockito.when(bookService.update(book1)).thenReturn(mockBook);
         Mockito.when(authorService.findById(1L)).thenReturn(author1);
         RestAssuredMockMvc.given()
                 .contentType(ContentType.JSON)
                 .body(bookRequestDto)
-                .queryParam("book-id", 1L)
+                .queryParam("id", 1L)
                 .when()
                 .put("/books")
                 .then()
                 .statusCode(200)
                 .body("id", Matchers.equalTo(1))
-                .body("bookName", Matchers.equalTo("Harry Potter"))
+                .body("title", Matchers.equalTo("House of dragon"))
                 .body("publishedAmount", Matchers.equalTo(2022123))
                 .body("soldAmount", Matchers.equalTo(21314234));
     }
@@ -134,11 +135,11 @@ class BookControllerTest {
     void showBestSellingBook(){
         Mockito.when(bookService.getBestSellingBook("H. P. Lovecraft")).thenReturn(book1);
         RestAssuredMockMvc
-                .given().queryParam("author-name", "H. P. Lovecraft")
-                .when().get("/books/most-selling")
+                .given().queryParam("by-author", "H. P. Lovecraft")
+                .when().get("/books/bestseller")
                 .then().statusCode(200)
                 .body("id", Matchers.equalTo(1))
-                .body("bookName", Matchers.equalTo("Harry Potter"))
+                .body("title", Matchers.equalTo("Harry Potter"))
                 .body("publishedAmount", Matchers.equalTo(2022123))
                 .body("soldAmount", Matchers.equalTo(21314234));
     }
@@ -147,11 +148,11 @@ class BookControllerTest {
     void showMostPublishedBook(){
         Mockito.when(bookService.getMostPublishedBook("H. P. Lovecraft")).thenReturn(book1);
         RestAssuredMockMvc
-                .given().queryParam("author-name", "H. P. Lovecraft")
+                .given().queryParam("by-author", "H. P. Lovecraft")
                 .when().get("/books/most-published")
                 .then().statusCode(200)
                 .body("id", Matchers.equalTo(1))
-                .body("bookName", Matchers.equalTo("Harry Potter"))
+                .body("title", Matchers.equalTo("Harry Potter"))
                 .body("publishedAmount", Matchers.equalTo(2022123))
                 .body("soldAmount", Matchers.equalTo(21314234));
     }
@@ -161,20 +162,20 @@ class BookControllerTest {
         List<Book> mockList = List.of(book1, book2, book3);
         Mockito.when(bookService.getBestSellingBooks("H. P. Lovecraft")).thenReturn(mockList);
         RestAssuredMockMvc
-                .given().queryParam("author-name","H. P. Lovecraft")
-                .when().get("/books/list-best-selling")
+                .given().queryParam("by-author","H. P. Lovecraft")
+                .when().get("/books/bestsellers")
                 .then().statusCode(200)
                 .body("size()", Matchers.equalTo(3))
                 .body("[0].id", Matchers.equalTo(1))
-                .body("[0].bookName", Matchers.equalTo("Harry Potter"))
+                .body("[0].title", Matchers.equalTo("Harry Potter"))
                 .body("[0].publishedAmount", Matchers.equalTo(2022123))
                 .body("[0].soldAmount", Matchers.equalTo(21314234))
                 .body("[1].id", Matchers.equalTo(2))
-                .body("[1].bookName", Matchers.equalTo("House of dragon"))
+                .body("[1].title", Matchers.equalTo("House of dragon"))
                 .body("[1].publishedAmount", Matchers.equalTo(1123124))
                 .body("[1].soldAmount", Matchers.equalTo(23441232))
                 .body("[2].id", Matchers.equalTo(3))
-                .body("[2].bookName", Matchers.equalTo("Twilight"))
+                .body("[2].title", Matchers.equalTo("Twilight"))
                 .body("[2].publishedAmount", Matchers.equalTo(12313123))
                 .body("[2].soldAmount", Matchers.equalTo(34234));
     }
@@ -184,20 +185,20 @@ class BookControllerTest {
         List<Book> mockList = List.of(book1, book2, book3);
         Mockito.when(bookService.getMostPublishedBooks("H. P. Lovecraft")).thenReturn(mockList);
         RestAssuredMockMvc
-                .given().queryParam("author-name","H. P. Lovecraft")
+                .given().queryParam("by-author","H. P. Lovecraft")
                 .when().get("/books/list-most-published")
                 .then().statusCode(200)
                 .body("size()", Matchers.equalTo(3))
                 .body("[0].id", Matchers.equalTo(1))
-                .body("[0].bookName", Matchers.equalTo("Harry Potter"))
+                .body("[0].title", Matchers.equalTo("Harry Potter"))
                 .body("[0].publishedAmount", Matchers.equalTo(2022123))
                 .body("[0].soldAmount", Matchers.equalTo(21314234))
                 .body("[1].id", Matchers.equalTo(2))
-                .body("[1].bookName", Matchers.equalTo("House of dragon"))
+                .body("[1].title", Matchers.equalTo("House of dragon"))
                 .body("[1].publishedAmount", Matchers.equalTo(1123124))
                 .body("[1].soldAmount", Matchers.equalTo(23441232))
                 .body("[2].id", Matchers.equalTo(3))
-                .body("[2].bookName", Matchers.equalTo("Twilight"))
+                .body("[2].title", Matchers.equalTo("Twilight"))
                 .body("[2].publishedAmount", Matchers.equalTo(12313123))
                 .body("[2].soldAmount", Matchers.equalTo(34234));
     }
@@ -207,25 +208,12 @@ class BookControllerTest {
         List<Book> mockList = List.of(this.book3);
         Mockito.when(bookService.getMostSuccessfulBooks("H. P. Lovecraft")).thenReturn(mockList);
         RestAssuredMockMvc
-                .given().queryParam("author-name","H. P. Lovecraft")
-                .when().get("/books/successful-book")
+                .given().queryParam("by-author","H. P. Lovecraft")
+                .when().get("/books/successful")
                 .then()
                 .body("[0].id", Matchers.equalTo(3))
-                .body("[0].bookName", Matchers.equalTo("Twilight"))
+                .body("[0].title", Matchers.equalTo("Twilight"))
                 .body("[0].publishedAmount", Matchers.equalTo(12313123))
                 .body("[0].soldAmount", Matchers.equalTo(34234));
-    }
-
-    @Test
-    void showMostSuccessfulAuthor(){
-        Mockito.when(bookService.findMostSuccessfulAuthor()).thenReturn(author1);
-        RestAssuredMockMvc
-                .given().get("/books/successful-author")
-                .then()
-                .body("id", Matchers.equalTo(1))
-                .body("authorName", Matchers.equalTo("H. P. Lovecraft"))
-                .body("birthDate.toString()", Matchers.equalTo("1993-11-05"))
-                .body("phone", Matchers.equalTo("42747583"))
-                .body("email", Matchers.equalTo("howard@gmail.com"));
     }
 }

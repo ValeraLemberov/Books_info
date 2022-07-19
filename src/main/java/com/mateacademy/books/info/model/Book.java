@@ -24,19 +24,15 @@ public class Book {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-
     @Column(name = "book_name")
-    private String bookName;
-
+    private String title;
     @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(name = "books_authors",
             joinColumns = @JoinColumn(name = "book_id"),
             inverseJoinColumns = @JoinColumn(name = "author_id"))
     private Set<Author> authors;
-
     @Column(name = "published_amount")
     private Integer publishedAmount;
-
     @Column(name = "sold_amount")
     private Integer soldAmount;
 }

@@ -18,7 +18,7 @@ public class BookMapper {
 
     public Book toModel(BookRequestDto bookRequestDto) {
         Book book = new Book();
-        book.setBookName(bookRequestDto.getBookName());
+        book.setTitle(bookRequestDto.getTitle());
         book.setPublishedAmount(bookRequestDto.getPublishedAmount());
         book.setSoldAmount(bookRequestDto.getSoldAmount());
         book.setAuthors(bookRequestDto.getAuthorId()
@@ -30,7 +30,7 @@ public class BookMapper {
     public BookResponseDto toResponseDto(Book book) {
         BookResponseDto bookResponseDto = new BookResponseDto();
         bookResponseDto.setId(book.getId());
-        bookResponseDto.setBookName(book.getBookName());
+        bookResponseDto.setTitle(book.getTitle());
         bookResponseDto.setSoldAmount(book.getSoldAmount());
         bookResponseDto.setPublishedAmount(book.getPublishedAmount());
         bookResponseDto.setAuthorId(book.getAuthors()

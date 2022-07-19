@@ -7,10 +7,9 @@ import org.springframework.stereotype.Component;
 
 @Component
 public class AuthorMapper {
-
     public Author toModel(AuthorRequestDto authorRequestDto) {
         Author author = new Author();
-        author.setAuthorName(authorRequestDto.getAuthorName());
+        author.setName(authorRequestDto.getName());
         author.setBirthDate(authorRequestDto.getBirthDate());
         author.setEmail(authorRequestDto.getEmail());
         author.setPhone(authorRequestDto.getPhone());
@@ -21,7 +20,7 @@ public class AuthorMapper {
         AuthorResponseDto authorResponseDto = new AuthorResponseDto();
         authorResponseDto.setId(author.getId());
         authorResponseDto.setEmail(author.getEmail());
-        authorResponseDto.setAuthorName(author.getAuthorName());
+        authorResponseDto.setName(author.getName());
         authorResponseDto.setPhone(author.getPhone());
         authorResponseDto.setBirthDate(author.getBirthDate());
         return authorResponseDto;

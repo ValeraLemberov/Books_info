@@ -21,10 +21,10 @@ class BookRepositoryTest {
         Assertions.assertEquals(3, actual.get(1).getAuthors().size());
         Assertions.assertEquals(4, actual.get(2).getAuthors().size());
         Assertions.assertEquals(2 ,actual.get(3).getAuthors().size());
-        Assertions.assertEquals("Harry Potter" ,actual.get(0).getBookName());
-        Assertions.assertEquals("Girl with the Dragon Tattoo,The:Millennium Trilogy", actual.get(1).getBookName());
-        Assertions.assertEquals("New Moon", actual.get(2).getBookName());
-        Assertions.assertEquals("Curious Incident of the Dog in the Night-time" ,actual.get(3).getBookName());
+        Assertions.assertEquals("Harry Potter" ,actual.get(0).getTitle());
+        Assertions.assertEquals("Girl with the Dragon Tattoo,The:Millennium Trilogy", actual.get(1).getTitle());
+        Assertions.assertEquals("New Moon", actual.get(2).getTitle());
+        Assertions.assertEquals("Curious Incident of the Dog in the Night-time" ,actual.get(3).getTitle());
     }
 
     @Test
@@ -37,7 +37,7 @@ class BookRepositoryTest {
     void findMostPublishedAmount_ok(){
         Book actual = bookRepository.findBestSoldAmount("John Grisham");
         Assertions.assertNotNull(actual);
-        Assertions.assertEquals("Fifty Shades Freed", actual.getBookName());
+        Assertions.assertEquals("Fifty Shades Freed", actual.getTitle());
         Assertions.assertEquals(5, actual.getAuthors().size());
         Assertions.assertEquals(24567545, actual.getPublishedAmount());
         Assertions.assertEquals(65736545, actual.getSoldAmount());
@@ -53,7 +53,7 @@ class BookRepositoryTest {
     void findBestSoldAmount_ok(){
         Book actual = bookRepository.findBestSoldAmount("Lev Tolstoy");
         Assertions.assertNotNull(actual);
-        Assertions.assertEquals("Fifty Shades Freed", actual.getBookName());
+        Assertions.assertEquals("Fifty Shades Freed", actual.getTitle());
         Assertions.assertEquals(5, actual.getAuthors().size());
         Assertions.assertEquals(24567545, actual.getPublishedAmount());
         Assertions.assertEquals(65736545, actual.getSoldAmount());
@@ -70,7 +70,7 @@ class BookRepositoryTest {
         List<Book> actual = bookRepository.findAllBySoldAmount("ing");
         Assertions.assertEquals(1, actual.size());
         Assertions.assertEquals(1, actual.get(0).getAuthors().size());
-        Assertions.assertEquals("Digital Fortress" , actual.get(0).getBookName());
+        Assertions.assertEquals("Digital Fortress" , actual.get(0).getTitle());
         Assertions.assertEquals(45635653, actual.get(0).getSoldAmount());
     }
 
@@ -85,7 +85,7 @@ class BookRepositoryTest {
         List<Book> actual = bookRepository.findAllByPublishedAmount("ing");
         Assertions.assertEquals(1, actual.size());
         Assertions.assertEquals("Girl with the Dragon Tattoo,The:Millennium Trilogy",
-                actual.get(0).getBookName());
+                actual.get(0).getTitle());
         Assertions.assertEquals(3, actual.get(0).getAuthors().size());
         Assertions.assertEquals(12312334, actual.get(0).getPublishedAmount());
         Assertions.assertEquals(5564567, actual.get(0).getSoldAmount());
@@ -102,7 +102,7 @@ class BookRepositoryTest {
         List<Book> actual = bookRepository.findMostSuccessfulBooks("John");
         Assertions.assertEquals(1, actual.size());
         Assertions.assertEquals(3, actual.get(0).getAuthors().size());
-        Assertions.assertEquals("House of dragon",actual.get(0).getBookName());
+        Assertions.assertEquals("House of dragon",actual.get(0).getTitle());
         Assertions.assertEquals(1123124 ,actual.get(0).getPublishedAmount());
         Assertions.assertEquals(23441232 ,actual.get(0).getSoldAmount());
     }
@@ -117,7 +117,7 @@ class BookRepositoryTest {
     void findMostSuccessfulAuthor_ok(){
         Author actual = bookRepository.findMostSuccessfulAuthor();
         Assertions.assertNotNull(actual);
-        Assertions.assertEquals("J. K. Rowling", actual.getAuthorName());
+        Assertions.assertEquals("J. K. Rowling", actual.getName());
         Assertions.assertEquals("1965-07-31", actual.getBirthDate().toString());
         Assertions.assertEquals("5384855043", actual.getPhone());
         Assertions.assertEquals("J.R.@gmail.com", actual.getEmail());

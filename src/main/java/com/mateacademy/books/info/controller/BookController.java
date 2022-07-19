@@ -1,10 +1,9 @@
 package com.mateacademy.books.info.controller;
 
-import com.mateacademy.books.info.dto.AuthorResponseDto;
 import com.mateacademy.books.info.dto.BookRequestDto;
 import com.mateacademy.books.info.dto.BookResponseDto;
-import com.mateacademy.books.info.dto.mapper.AuthorMapper;
 import com.mateacademy.books.info.dto.mapper.BookMapper;
+import com.mateacademy.books.info.model.Book;
 import com.mateacademy.books.info.service.BookService;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
@@ -23,14 +22,11 @@ import org.springframework.web.bind.annotation.RestController;
 public class BookController {
     private final BookService bookService;
     private final BookMapper bookMapper;
-    private final AuthorMapper authorMapper;
 
     public BookController(BookService bookService,
-                          BookMapper bookMapper,
-                          AuthorMapper authorMapper) {
+                          BookMapper bookMapper) {
         this.bookService = bookService;
         this.bookMapper = bookMapper;
-        this.authorMapper = authorMapper;
     }
 
     @PostMapping
@@ -45,54 +41,53 @@ public class BookController {
     @PutMapping
     @ApiOperation(value = "Update book by id")
     public BookResponseDto update(@RequestBody BookRequestDto bookRequestDto,
-                                  @RequestParam(name = "book-id")
-                                  @ApiParam(value = "Insert book id") Long bookId) {
-        return bookMapper
-                .toResponseDto(bookService
-                        .update(bookMapper
-                                .toModel(bookRequestDto), bookId));
+                                  @RequestParam(name = "id")
+                                  @ApiParam(value = "Insert book id") Long id) {
+        Book book = bookMapper.toModel(bookRequestDto);
+        book.setId(id);
+        return bookMapper.toResponseDto(bookService.update(book));
     }
 
     @DeleteMapping
     @ApiOperation(value = "Delete book by id")
-    public void delete(@RequestParam(name = "book-id")
-                       @ApiParam(value = "Insert book id") Long bookId) {
-        bookService.delete(bookId);
+    public void delete(@RequestParam(name = "id")
+                       @ApiParam(value = "Insert book id") Long id) {
+        bookService.delete(id);
     }
 
-    @GetMapping("/most-selling")
+    @GetMapping("/bestseller")
     @ApiOperation(value = "Get bestseller bu the author's name")
-    public BookResponseDto getMostSellingBook(@RequestParam(name = "author-name")
+    public BookResponseDto getMostSellingBook(@RequestParam(name = "by-author")
                                               @ApiParam(value = "Insert author name")
-                                              String authorName) {
-        return bookMapper.toResponseDto(bookService.getBestSellingBook(authorName));
+                                              String name) {
+        return bookMapper.toResponseDto(bookService.getBestSellingBook(name));
     }
 
-    @GetMapping("/all-books")
+    @GetMapping
     @ApiOperation(value = "Get all books by the author's name")
-    public List<BookResponseDto> getAllBooksByAuthorName(@RequestParam(name = "author-name")
+    public List<BookResponseDto> getAllBooksByAuthorName(@RequestParam(name = "by-author")
                                                          @ApiParam(value = "Insert author name")
-                                                         String authorName) {
+                                                         String name) {
 
-        return bookService.getAllByAuthorName(authorName)
+        return bookService.getAllByAuthorName(name)
                 .stream()
                 .map(bookMapper::toResponseDto).toList();
     }
 
     @GetMapping("/most-published")
     @ApiOperation(value = "Get the most published books by the author's name")
-    public BookResponseDto getMostPublishedBook(@RequestParam(name = "author-name")
+    public BookResponseDto getMostPublishedBook(@RequestParam(name = "by-author")
                                                 @ApiParam(value = "Insert author name")
-                                                String authorName) {
-        return bookMapper.toResponseDto(bookService.getMostPublishedBook(authorName));
+                                                String name) {
+        return bookMapper.toResponseDto(bookService.getMostPublishedBook(name));
     }
 
-    @GetMapping("/list-best-selling")
+    @GetMapping("/bestsellers")
     @ApiOperation(value = "Get all top-selling books by the author name")
-    public List<BookResponseDto> getBestSellingBook(@RequestParam(name = "author-name")
+    public List<BookResponseDto> getBestSellingBook(@RequestParam(name = "by-author")
                                                     @ApiParam(value = "Insert author name")
-                                                                String authorName) {
-        return bookService.getBestSellingBooks(authorName)
+                                                                String name) {
+        return bookService.getBestSellingBooks(name)
                 .stream()
                 .map(bookMapper::toResponseDto)
                 .toList();
@@ -100,27 +95,21 @@ public class BookController {
 
     @GetMapping("/list-most-published")
     @ApiOperation(value = "Get all top-published books by the author's nane")
-    public List<BookResponseDto> getMostPublishedBooks(@RequestParam(name = "author-name")
+    public List<BookResponseDto> getMostPublishedBooks(@RequestParam(name = "by-author")
                                                            @ApiParam(value = "Insert author name")
-                                                                   String authorName) {
-        return bookService.getMostPublishedBooks(authorName)
+                                                                   String name) {
+        return bookService.getMostPublishedBooks(name)
                 .stream()
                 .map(bookMapper::toResponseDto).toList();
     }
 
-    @GetMapping("/successful-book")
+    @GetMapping("/successful")
     @ApiOperation(value = "Get top-successful books by the author's name")
-    public List<BookResponseDto> getMostSuccessful(@RequestParam(name = "author-name")
+    public List<BookResponseDto> getMostSuccessful(@RequestParam(name = "by-author")
                                                        @ApiParam(value = "Insert author name")
-                                                               String authorName) {
-        return bookService.getMostSuccessfulBooks(authorName)
+                                                               String name) {
+        return bookService.getMostSuccessfulBooks(name)
                 .stream()
                 .map(bookMapper::toResponseDto).toList();
-    }
-
-    @GetMapping("/successful-author")
-    @ApiOperation(value = "Get the most successful author")
-    public AuthorResponseDto getSuccessfulAuthor() {
-        return authorMapper.toResponseDto(bookService.findMostSuccessfulAuthor());
     }
 }

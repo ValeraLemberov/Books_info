@@ -19,28 +19,22 @@ Program has next functions:
 - Controller 
 - Repository
 - Service
-- Dto/Mapper
-- Test
 ---
 
 ## Technologies
 - Java 11
 - Spring boot
   - Spring mvc
-  - Spring hibernate
 - MySQL database
 - H2 database
 - Query Language - HQL 
 - Swagger
 - Lombok
-- Unit 5 Test
+- JUnit 5 Test
 - Maven
 
 ## How to run "BooksInfo"
-### Swagger
-- Clone this repository
+- Clone this repository.
 - Run this project on yours IntelliJ IDEA.
-- Fill variable spring.datasource.username and spring.datasource.password [application.properties](src/main/resources/application.properties) to connect application to database.
-- Follow the link [http://localhost:8080/swagger-ui/#/](http://localhost:8080/swagger-ui/#/)
-- And you will see all the URLs you can use. 
-### Or you can use Postman
+- Fill properties spring.datasource.username and spring.datasource.password in [application.properties](src/main/resources/application.properties) to connect application to database.
+- Follow the link [http://localhost:8080/swagger-ui/#/](http://localhost:8080/swagger-ui/#/) where you can test APi.

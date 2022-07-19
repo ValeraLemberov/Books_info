@@ -21,16 +21,12 @@ public class Author {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
     private Long id;
-
     @Column(name = "author_name")
-    private String authorName;
-
+    private String name;
     @Column(name = "birth_date")
     private LocalDate birthDate;
-
     @Column(name = "phone")
     private String phone;
-
     @Column(name = "email")
     private String email;
 }

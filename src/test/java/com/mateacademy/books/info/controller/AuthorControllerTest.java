@@ -4,6 +4,7 @@ import com.mateacademy.books.info.dto.AuthorRequestDto;
 import com.mateacademy.books.info.model.Author;
 import com.mateacademy.books.info.service.AuthorService;
 import com.mateacademy.books.info.dto.mapper.AuthorMapper;
+import com.mateacademy.books.info.service.BookService;
 import io.restassured.http.ContentType;
 import io.restassured.module.mockmvc.RestAssuredMockMvc;
 import java.time.LocalDate;
@@ -40,13 +41,16 @@ class AuthorControllerTest {
     @MockBean
     private AuthorService authorService;
 
+    @MockBean
+    private BookService bookService;
+
     @BeforeEach
     void setUp() {
         RestAssuredMockMvc.mockMvc(mockMvc);
         mockAuthor = new Author(null, "Charles Michael",
                 LocalDate. of(1962, 11, 21),
                 "+546487921", "palahniuk@gmail.com");
-        authorRequestDto = new AuthorRequestDto(mockAuthor.getAuthorName(),
+        authorRequestDto = new AuthorRequestDto(mockAuthor.getName(),
                 mockAuthor.getBirthDate(), mockAuthor.getPhone(),
                 mockAuthor.getEmail());
         author = new Author(1L, "Charles Michael",
@@ -62,7 +66,7 @@ class AuthorControllerTest {
                 .when().post("/authors")
                 .then().statusCode(200)
                 .body("id", Matchers.equalTo(1))
-                .body("authorName", Matchers.equalTo("Charles Michael"))
+                .body("name", Matchers.equalTo("Charles Michael"))
                 .body("birthDate.toString()", Matchers.equalTo("1962-11-21"))
                 .body("phone", Matchers.equalTo("+546487921"))
                 .body("email", Matchers.equalTo("palahniuk@gmail.com"));
@@ -70,17 +74,31 @@ class AuthorControllerTest {
 
     @Test
     void updateAuthor(){
-        mockAuthor.setAuthorName("Arkadii Natanovich");
-        author.setAuthorName("Arkadii Natanovich");
-        authorRequestDto.setAuthorName("Arkadii Natanovich");
-        Mockito.when(authorService.update(mockAuthor, 1L)).thenReturn(author);
+        mockAuthor.setName("Arkadii Natanovich");
+        mockAuthor.setId(1L);
+        author.setName("Arkadii Natanovich");
+        authorRequestDto.setName("Arkadii Natanovich");
+        Mockito.when(authorService.update(mockAuthor)).thenReturn(author);
         RestAssuredMockMvc
                 .given().contentType(ContentType.JSON).body(authorRequestDto)
-                .queryParam("author-id", 1L)
+                .queryParam("id", 1L)
                 .when().put("/authors")
                 .then().statusCode(200)
                 .body("id", Matchers.equalTo(1))
-                .body("authorName", Matchers.equalTo("Arkadii Natanovich"))
+                .body("name", Matchers.equalTo("Arkadii Natanovich"))
+                .body("birthDate.toString()", Matchers.equalTo("1962-11-21"))
+                .body("phone", Matchers.equalTo("+546487921"))
+                .body("email", Matchers.equalTo("palahniuk@gmail.com"));
+    }
+
+    @Test
+    void showMostSuccessfulAuthor(){
+        Mockito.when(bookService.findMostSuccessfulAuthor()).thenReturn(author);
+        RestAssuredMockMvc
+                .given().get("/authors/successful")
+                .then()
+                .body("id", Matchers.equalTo(1))
+                .body("name", Matchers.equalTo("Charles Michael"))
                 .body("birthDate.toString()", Matchers.equalTo("1962-11-21"))
                 .body("phone", Matchers.equalTo("+546487921"))
                 .body("email", Matchers.equalTo("palahniuk@gmail.com"));

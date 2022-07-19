@@ -9,7 +9,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class BookRequestDto {
-    private String bookName;
+    private String title;
     private Set<Long> authorId;
     private Integer publishedAmount;
     private Integer soldAmount;

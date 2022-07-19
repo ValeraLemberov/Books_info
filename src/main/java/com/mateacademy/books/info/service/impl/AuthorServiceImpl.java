@@ -24,8 +24,7 @@ public class AuthorServiceImpl implements AuthorService {
     }
 
     @Override
-    public Author update(Author model, Long modelId) {
-        model.setId(modelId);
+    public Author update(Author model) {
         return authorRepository.save(model);
     }
 

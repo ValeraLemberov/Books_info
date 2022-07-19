@@ -8,11 +8,11 @@
 		<version>2.6.0</version>
 		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
-	<groupId>com.mate-academy</groupId>
+	<groupId>com.book.info.test</groupId>
 	<artifactId>booksAndAuthors</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
 	<name>booksAndAuthors</name>
-	<description>test from mate academy</description>
+	<description>test</description>
 	<properties>
 		<java.version>17</java.version>
 	</properties>
